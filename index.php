@@ -1,4 +1,5 @@
 <?php
+
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Factory\AppFactory;
@@ -17,7 +18,7 @@ $app->get('/', function (Request $request, Response $response, $args) {
 });
 
 $app->get('/aula/{nome}', function (Request $request, Response $response, $args) {
-    
+
     $aula = new Aula();
     $resultado = $aula->listarConteudoAula($args['nome']);
 
@@ -26,11 +27,20 @@ $app->get('/aula/{nome}', function (Request $request, Response $response, $args)
 });
 
 $app->get('/dados-aulas', function (Request $request, Response $response, $args) {
-    
+
     $aula = new Aula();
     $dados = $aula->lerDadosAulas();
 
     $response->getBody()->write($dados);
+    return $response->withHeader("Content-Type", 'application/json');
+});
+
+$app->get('/hash/{conteudo}', function (Request $request, Response $response, $args) {
+
+    $aula = new Aula();
+    $hash = $aula->criarHash($args['conteudo']);
+
+    $response->getBody()->write(json_encode($hash));
     return $response->withHeader("Content-Type", 'application/json');
 });
 
